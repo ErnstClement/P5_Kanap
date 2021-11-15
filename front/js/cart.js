@@ -14,8 +14,6 @@ function getPanier() {
         .then((data) => {
           // récuperation des données de l'api //
 
-          console.log(item);
-
           article = document.createElement("article");
           article.className = "cart__item";
           article.id = "{product-ID}";
@@ -64,6 +62,10 @@ function getPanier() {
           div6.appendChild(p3);
 
           document.getElementById("cart__items").appendChild(article);
+
+          var qtyChange = document.getElementsByClassName("itemQuantity").value;
+
+          console.log(qtyChange);
         });
     });
   }
@@ -72,7 +74,6 @@ function getPanier() {
 getPanier();
 
 // Création variable pour la séléction de la quantitée
-var qtyChange = document.getElementsByClassName("itemQuantity");
 
 /* qtyChange.addEventListener("change", function (element) {
   preventDefault;
