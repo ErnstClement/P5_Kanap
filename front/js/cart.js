@@ -46,12 +46,12 @@ function getPanier() {
           p2.innerHTML = `Qté :`;
           div5.appendChild(p2);
           input = document.createElement("input");
+          input.value = item.qty;
           input.setAttribute("type", "number");
           input.setAttribute("class", "itemQuantity");
           input.setAttribute("name", "itemQuantity");
           input.setAttribute("min", "1");
           input.setAttribute("max", "100");
-          input.setAttribute("value", item.qty);
           div5.appendChild(input);
           div6 = document.createElement("div");
           div6.className = "cart__item__content__settings__delete";
@@ -63,9 +63,7 @@ function getPanier() {
 
           document.getElementById("cart__items").appendChild(article);
 
-          var qtyChange = document.getElementsByClassName("itemQuantity").value;
-
-          console.log(qtyChange);
+          console.log(input.value);
         });
     });
   }
