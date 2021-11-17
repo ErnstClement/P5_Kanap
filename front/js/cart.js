@@ -14,6 +14,8 @@ function getPanier() {
         .then((data) => {
           // récuperation des données de l'api //
 
+          //Création automatique du HTML en fonction des objets dans "cartPanier"
+
           article = document.createElement("article");
           article.className = "cart__item";
           article.id = "{product-ID}";
@@ -63,30 +65,119 @@ function getPanier() {
 
           document.getElementById("cart__items").appendChild(article);
 
-          console.log(input.value);
+          // Calcul du nombre d'article
+
+          var articleQty = document.getElementsByClassName("itemQuantity");
+          var length = articleQty.length;
+          totalQty = 0;
+          console.log(articleQty);
+
+          for (var i = 0; i < length; ++i) {
+            totalQty += articleQty[i].valueAsNumber;
+          }
+          // calcul du prix total
+          totalPrice = 0;
+
+          let productTotalPrice = document.getElementById("totalPrice");
+          productTotalPrice.innerHTML = totalPrice;
+
+          //Création formulaire
+          function getForm() {
+            let form = document.querySelector(".cart__order__form");
+
+            //Limitation des caractères
+            let emailRegExp = new RegExp(
+              "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+            );
+            let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+            let addressRegExp = new RegExp(
+              "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+            );
+
+            // Ecoute de la modification du prénom
+            form.firstName.addEventListener("change", function () {
+              validFirstName(this);
+            });
+
+            // Ecoute de la modification du prénom
+            form.lastName.addEventListener("change", function () {
+              validLastName(this);
+            });
+
+            // Ecoute de la modification du prénom
+            form.address.addEventListener("change", function () {
+              validAddress(this);
+            });
+
+            // Ecoute de la modification du prénom
+            form.city.addEventListener("change", function () {
+              validCity(this);
+            });
+
+            // Ecoute de la modification du prénom
+            form.email.addEventListener("change", function () {
+              validEmail(this);
+            });
+
+            //validation du prénom
+            const validFirstName = function (inputFirstName) {
+              let firstNameErrorMsg = inputFirstName.nextElementSibling;
+
+              if (charRegExp.test(inputFirstName.value)) {
+                firstNameErrorMsg.innerHTML = "";
+              } else {
+                firstNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+              }
+            };
+
+            //validation du nom
+            const validLastName = function (inputLastName) {
+              let lastNameErrorMsg = inputLastName.nextElementSibling;
+
+              if (charRegExp.test(inputLastName.value)) {
+                lastNameErrorMsg.innerHTML = "";
+              } else {
+                lastNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+              }
+            };
+
+            //validation de l'adresse
+            const validAddress = function (inputAddress) {
+              let addressErrorMsg = inputAddress.nextElementSibling;
+
+              if (addressRegExp.test(inputAddress.value)) {
+                addressErrorMsg.innerHTML = "";
+              } else {
+                addressErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+              }
+            };
+
+            //validation de la ville
+            const validCity = function (inputCity) {
+              let cityErrorMsg = inputCity.nextElementSibling;
+
+              if (charRegExp.test(inputCity.value)) {
+                cityErrorMsg.innerHTML = "";
+              } else {
+                cityErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+              }
+            };
+
+            //validation de l'email
+            const validEmail = function (inputEmail) {
+              let emailErrorMsg = inputEmail.nextElementSibling;
+
+              if (emailRegExp.test(inputEmail.value)) {
+                emailErrorMsg.innerHTML = "";
+              } else {
+                emailErrorMsg.innerHTML = "Veuillez renseigner votre email.";
+              }
+            };
+          }
+          getForm();
         });
     });
   }
 }
 
 getPanier();
-
-// Création variable pour la séléction de la quantitée
-
-/* qtyChange.addEventListener("change", function (element) {
-  preventDefault;
-  localStorage.setItem(element.value);
-  document.location.reload();
-});
- */
-let emptyCart = document.getElementsByClassName("deleteItem"); // Création variable pour la suppression article/panier
-
-for (var i = 0; i < emptyCart.length; i++) {
-  console.log(emptyCart[i]);
-  emptyCart[i].addEventListener("click", function (event) {
-    alert("L'article a bien été retiré du panier");
-    event.preventDefault;
-    localStorage.removeItem();
-    document.location.reload();
-  });
-}

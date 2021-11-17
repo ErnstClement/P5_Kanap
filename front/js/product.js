@@ -45,6 +45,7 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
         id: data._id,
         qty: qty,
         colors: colorsChoice,
+        price: data.price,
       };
 
       var panier = localStorage.getItem("panier");
