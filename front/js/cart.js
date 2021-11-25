@@ -7,6 +7,7 @@ function getPanier() {
   if (cartPanier && productContainer) {
     // creation condition cartPanier & productContainer EXISTE //
     var total = 0;
+    var totalPrice = 0;
     Object.values(cartPanier).map((item) => {
       // //
       fetch("http://localhost:3000/api/products/" + item.id) // demande API //
@@ -76,10 +77,13 @@ function getPanier() {
             totalQty += articleQty[i].valueAsNumber;
           }
           // calcul du prix total
-          totalPrice = 0;
 
           let productTotalPrice = document.getElementById("totalPrice");
+          totalPrice += item.qty * item.price;
+
           productTotalPrice.innerHTML = totalPrice;
+
+          console.log(productTotalPrice);
 
           //Création formulaire
           function getForm() {
