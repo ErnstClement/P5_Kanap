@@ -43,9 +43,12 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
 
       var kanapOrder = {
         id: data._id,
+        name: data.name,
         qty: qty,
         colors: colorsChoice,
         price: data.price,
+        img: data.imageUrl,
+        alt: data.altTxt,
       };
 
       var panier = localStorage.getItem("panier");

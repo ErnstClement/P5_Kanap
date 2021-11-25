@@ -1,185 +1,216 @@
-function getPanier() {
-  // Fonction pour recuperer le LOCAL STORAGE //
-  let cartPanier = localStorage.getItem("panier"); // creation Variable getItem //
-  cartPanier = JSON.parse(cartPanier); // conversion JSON => JS //
-  let productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items" //
+// récupération du LOCAL STORAGE //
+let cartPanier = JSON.parse(localStorage.getItem("panier")); // creation Variable getItem //
+let productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items" //
+console.table(cartPanier);
+fetch("http://localhost:3000/api/products")
+  .then((Res) => Res.json())
+  .then((data) => {
+    console.log(data);
 
-  if (cartPanier && productContainer) {
+    (error) => {
+      console.log("Server éteint");
+    };
+  });
+
+function getPanier() {
+  if (cartPanier === null || cartPanier === 0) {
+    alert("Votre panier est vide.");
+  } else cartPanier && productContainer;
+  {
     // creation condition cartPanier & productContainer EXISTE //
-    var total = 0;
+    var totalQty = 0;
     var totalPrice = 0;
     Object.values(cartPanier).map((item) => {
-      // //
-      fetch("http://localhost:3000/api/products/" + item.id) // demande API //
-        .then((Res) => Res.json()) // réponse de la requete + transformation en .json //
-        .then((data) => {
-          // récuperation des données de l'api //
+      console.log(item);
 
-          //Création automatique du HTML en fonction des objets dans "cartPanier"
+      //Création automatique du HTML en fonction des objets dans "cartPanier"
 
-          article = document.createElement("article");
-          article.className = "cart__item";
-          article.id = "{product-ID}";
-          div1 = document.createElement("div");
-          div1.className = "cart__item__img";
-          article.appendChild(div1);
-          img = document.createElement("img");
-          img.src = data.imageUrl;
-          img.alt = data.altTxt;
-          div1.appendChild(img);
-          div2 = document.createElement("div");
-          div2.className = "cart__item__content";
-          article.appendChild(div2);
-          div3 = document.createElement("div");
-          div3.className = "cart__item__content__titlePrice";
-          div2.appendChild(div3);
-          h2 = document.createElement("h2");
-          h2.innerHTML = `${data.name} ${item.colors}`;
-          div3.appendChild(h2);
-          p = document.createElement("p");
-          p.innerHTML = data.price + `€`;
-          div3.appendChild(p);
-          div4 = document.createElement("div");
-          div4.className = "cart__item__content__settings";
-          div2.appendChild(div4);
-          div5 = document.createElement("div");
-          div5.className = "cart__item__content__settings__quantity";
-          div4.appendChild(div5);
-          p2 = document.createElement("p");
-          p2.innerHTML = `Qté :`;
-          div5.appendChild(p2);
-          input = document.createElement("input");
-          input.value = item.qty;
-          input.setAttribute("type", "number");
-          input.setAttribute("class", "itemQuantity");
-          input.setAttribute("name", "itemQuantity");
-          input.setAttribute("min", "1");
-          input.setAttribute("max", "100");
-          div5.appendChild(input);
-          div6 = document.createElement("div");
-          div6.className = "cart__item__content__settings__delete";
-          div4.appendChild(div6);
-          p3 = document.createElement("p");
-          p3.className = "deleteItem";
-          p3.innerHTML = "Supprimer";
-          div6.appendChild(p3);
+      article = document.createElement("article");
+      article.className = "cart__item";
+      article.id = "{product-ID}";
+      div1 = document.createElement("div");
+      div1.className = "cart__item__img";
+      article.appendChild(div1);
+      img = document.createElement("img");
+      img.src = item.img;
+      img.alt = item.altTxt;
+      div1.appendChild(img);
+      div2 = document.createElement("div");
+      div2.className = "cart__item__content";
+      article.appendChild(div2);
+      div3 = document.createElement("div");
+      div3.className = "cart__item__content__titlePrice";
+      div2.appendChild(div3);
+      h2 = document.createElement("h2");
+      h2.innerHTML = `${item.name} ${item.colors}`;
+      div3.appendChild(h2);
+      p = document.createElement("p");
+      p.innerHTML = item.price + `€`;
+      div3.appendChild(p);
+      div4 = document.createElement("div");
+      div4.className = "cart__item__content__settings";
+      div2.appendChild(div4);
+      div5 = document.createElement("div");
+      div5.className = "cart__item__content__settings__quantity";
+      div4.appendChild(div5);
+      p2 = document.createElement("p");
+      p2.innerHTML = `Qté :`;
+      div5.appendChild(p2);
+      input = document.createElement("input");
+      input.value = item.qty;
+      input.setAttribute("type", "number");
+      input.setAttribute("class", "itemQuantity");
+      input.setAttribute("name", "itemQuantity");
+      input.setAttribute("min", "1");
+      input.setAttribute("max", "100");
+      div5.appendChild(input);
+      div6 = document.createElement("div");
+      div6.className = "cart__item__content__settings__delete";
+      div4.appendChild(div6);
+      p3 = document.createElement("p");
+      p3.className = "deleteItem";
+      p3.innerHTML = "Supprimer";
+      div6.appendChild(p3);
 
-          document.getElementById("cart__items").appendChild(article);
+      document.getElementById("cart__items").appendChild(article);
 
-          // Calcul du nombre d'article
+      // Calcul du nombre d'article
+      var totalQty = 0;
 
-          var articleQty = document.getElementsByClassName("itemQuantity");
-          var length = articleQty.length;
-          totalQty = 0;
-          console.log(articleQty);
+      var articleQty = document.getElementsByClassName("itemQuantity");
+      totalQty += parseInt(item.qty);
 
-          for (var i = 0; i < length; ++i) {
-            totalQty += articleQty[i].valueAsNumber;
-          }
-          // calcul du prix total
+      let productTotalQty = document.getElementById("totalQuantity");
+      productTotalQty.innerHTML = totalQty;
 
-          let productTotalPrice = document.getElementById("totalPrice");
-          totalPrice += item.qty * item.price;
+      // calcul du prix total
+      var totalPrice = 0;
+      let productTotalPrice = document.getElementById("totalPrice");
+      totalPrice += item.qty * item.price;
 
-          productTotalPrice.innerHTML = totalPrice;
+      productTotalPrice.innerHTML = totalPrice;
 
-          console.log(productTotalPrice);
+      // Suppression Article
 
-          //Création formulaire
-          function getForm() {
-            let form = document.querySelector(".cart__order__form");
+      let btnSupprimer = document.getElementsByClassName("deleteItem");
 
-            //Limitation des caractères
-            let emailRegExp = new RegExp(
-              "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-            );
-            let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-            let addressRegExp = new RegExp(
-              "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
-            );
+      for (let k = 0; k < btnSupprimer.length; k++) {
+        btnSupprimer[k].addEventListener("click", (event) => {
+          console.log("hello");
+          event.preventDefault();
 
-            // Ecoute de la modification du prénom
-            form.firstName.addEventListener("change", function () {
-              validFirstName(this);
-            });
+          let idProduit = cartPanier[k].id;
+          let couleurProduit = cartPanier[k].colors;
 
-            // Ecoute de la modification du prénom
-            form.lastName.addEventListener("change", function () {
-              validLastName(this);
-            });
+          console.log(cartPanier);
 
-            // Ecoute de la modification du prénom
-            form.address.addEventListener("change", function () {
-              validAddress(this);
-            });
+          cartPanier = cartPanier.filter(
+            (el) => el.id !== idProduit || el.colors !== couleurProduit
+          );
 
-            // Ecoute de la modification du prénom
-            form.city.addEventListener("change", function () {
-              validCity(this);
-            });
+          console.log(cartPanier);
+          //Alerte produit supprimé et refresh
 
-            // Ecoute de la modification du prénom
-            form.email.addEventListener("change", function () {
-              validEmail(this);
-            });
-
-            //validation du prénom
-            const validFirstName = function (inputFirstName) {
-              let firstNameErrorMsg = inputFirstName.nextElementSibling;
-
-              if (charRegExp.test(inputFirstName.value)) {
-                firstNameErrorMsg.innerHTML = "";
-              } else {
-                firstNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
-              }
-            };
-
-            //validation du nom
-            const validLastName = function (inputLastName) {
-              let lastNameErrorMsg = inputLastName.nextElementSibling;
-
-              if (charRegExp.test(inputLastName.value)) {
-                lastNameErrorMsg.innerHTML = "";
-              } else {
-                lastNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
-              }
-            };
-
-            //validation de l'adresse
-            const validAddress = function (inputAddress) {
-              let addressErrorMsg = inputAddress.nextElementSibling;
-
-              if (addressRegExp.test(inputAddress.value)) {
-                addressErrorMsg.innerHTML = "";
-              } else {
-                addressErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
-              }
-            };
-
-            //validation de la ville
-            const validCity = function (inputCity) {
-              let cityErrorMsg = inputCity.nextElementSibling;
-
-              if (charRegExp.test(inputCity.value)) {
-                cityErrorMsg.innerHTML = "";
-              } else {
-                cityErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
-              }
-            };
-
-            //validation de l'email
-            const validEmail = function (inputEmail) {
-              let emailErrorMsg = inputEmail.nextElementSibling;
-
-              if (emailRegExp.test(inputEmail.value)) {
-                emailErrorMsg.innerHTML = "";
-              } else {
-                emailErrorMsg.innerHTML = "Veuillez renseigner votre email.";
-              }
-            };
-          }
-          getForm();
+          localStorage.setItem("panier", JSON.stringify(cartPanier));
+          location.reload();
+          alert("Ce produit a bien été supprimé du panier");
         });
+      }
+
+      //Création formulaire
+      function getForm() {
+        let form = document.querySelector(".cart__order__form");
+
+        //Limitation des caractères
+        let emailRegExp = new RegExp(
+          "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+        );
+        let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+        let addressRegExp = new RegExp(
+          "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+        );
+
+        // Ecoute de la modification du prénom
+        form.firstName.addEventListener("change", function () {
+          validFirstName(this);
+        });
+
+        // Ecoute de la modification du prénom
+        form.lastName.addEventListener("change", function () {
+          validLastName(this);
+        });
+
+        // Ecoute de la modification du prénom
+        form.address.addEventListener("change", function () {
+          validAddress(this);
+        });
+
+        // Ecoute de la modification du prénom
+        form.city.addEventListener("change", function () {
+          validCity(this);
+        });
+
+        // Ecoute de la modification du prénom
+        form.email.addEventListener("change", function () {
+          validEmail(this);
+        });
+
+        //validation du prénom
+        const validFirstName = function (inputFirstName) {
+          let firstNameErrorMsg = inputFirstName.nextElementSibling;
+
+          if (charRegExp.test(inputFirstName.value)) {
+            firstNameErrorMsg.innerHTML = "";
+          } else {
+            firstNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+          }
+        };
+
+        //validation du nom
+        const validLastName = function (inputLastName) {
+          let lastNameErrorMsg = inputLastName.nextElementSibling;
+
+          if (charRegExp.test(inputLastName.value)) {
+            lastNameErrorMsg.innerHTML = "";
+          } else {
+            lastNameErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+          }
+        };
+
+        //validation de l'adresse
+        const validAddress = function (inputAddress) {
+          let addressErrorMsg = inputAddress.nextElementSibling;
+
+          if (addressRegExp.test(inputAddress.value)) {
+            addressErrorMsg.innerHTML = "";
+          } else {
+            addressErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+          }
+        };
+
+        //validation de la ville
+        const validCity = function (inputCity) {
+          let cityErrorMsg = inputCity.nextElementSibling;
+
+          if (charRegExp.test(inputCity.value)) {
+            cityErrorMsg.innerHTML = "";
+          } else {
+            cityErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
+          }
+        };
+
+        //validation de l'email
+        const validEmail = function (inputEmail) {
+          let emailErrorMsg = inputEmail.nextElementSibling;
+
+          if (emailRegExp.test(inputEmail.value)) {
+            emailErrorMsg.innerHTML = "";
+          } else {
+            emailErrorMsg.innerHTML = "Veuillez renseigner votre email.";
+          }
+        };
+      }
+      getForm();
     });
   }
 }
