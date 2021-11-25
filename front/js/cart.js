@@ -5,15 +5,13 @@ console.table(cartPanier);
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
   .then((data) => {
-    console.log(data);
-
     (error) => {
       console.log("Server éteint");
     };
   });
 
 function getPanier() {
-  if (cartPanier === null || cartPanier === 0) {
+  if (cartPanier == null || cartPanier == 0) {
     alert("Votre panier est vide.");
   } else cartPanier && productContainer;
   {
@@ -21,8 +19,6 @@ function getPanier() {
     var totalQty = 0;
     var totalPrice = 0;
     Object.values(cartPanier).map((item) => {
-      console.log(item);
-
       //Création automatique du HTML en fonction des objets dans "cartPanier"
 
       article = document.createElement("article");
