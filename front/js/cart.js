@@ -5,6 +5,7 @@ console.table(cartPanier);
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
   .then((data) => {
+    console.log(data);
     (error) => {
       console.log("Server éteint");
     };
@@ -13,9 +14,8 @@ fetch("http://localhost:3000/api/products")
 function getPanier() {
   if (cartPanier == null || cartPanier == 0) {
     alert("Votre panier est vide.");
-  } else cartPanier && productContainer;
+  } else cartPanier && productContainer; // creation condition cartPanier & productContainer EXISTE //
   {
-    // creation condition cartPanier & productContainer EXISTE //
     var totalQty = 0;
     var totalPrice = 0;
     Object.values(cartPanier).map((item) => {
@@ -69,49 +69,6 @@ function getPanier() {
       div6.appendChild(p3);
 
       document.getElementById("cart__items").appendChild(article);
-
-      // Calcul du nombre d'article
-      var totalQty = 0;
-
-      var articleQty = document.getElementsByClassName("itemQuantity");
-      totalQty += parseInt(item.qty);
-
-      let productTotalQty = document.getElementById("totalQuantity");
-      productTotalQty.innerHTML = totalQty;
-
-      // calcul du prix total
-      var totalPrice = 0;
-      let productTotalPrice = document.getElementById("totalPrice");
-      totalPrice += item.qty * item.price;
-
-      productTotalPrice.innerHTML = totalPrice;
-
-      // Suppression Article
-
-      let btnSupprimer = document.getElementsByClassName("deleteItem");
-
-      for (let k = 0; k < btnSupprimer.length; k++) {
-        btnSupprimer[k].addEventListener("click", (event) => {
-          console.log("hello");
-          event.preventDefault();
-
-          let idProduit = cartPanier[k].id;
-          let couleurProduit = cartPanier[k].colors;
-
-          console.log(cartPanier);
-
-          cartPanier = cartPanier.filter(
-            (el) => el.id !== idProduit || el.colors !== couleurProduit
-          );
-
-          console.log(cartPanier);
-          //Alerte produit supprimé et refresh
-
-          localStorage.setItem("panier", JSON.stringify(cartPanier));
-          location.reload();
-          alert("Ce produit a bien été supprimé du panier");
-        });
-      }
 
       //Création formulaire
       function getForm() {
@@ -212,3 +169,61 @@ function getPanier() {
 }
 
 getPanier();
+
+// Calcul du nombre d'article
+var totalQty = 0;
+console.log(item.qty);
+
+var articleQty = document.getElementsByClassName("itemQuantity");
+totalQty += parseInt(item.qty);
+
+console.log(totalQty);
+
+let productTotalQty = document.getElementById("totalQuantity");
+productTotalQty.innerHTML = totalQty;
+
+// calcul du prix total
+var totalPrice = 0;
+let productTotalPrice = document.getElementById("totalPrice");
+totalPrice += item.qty * item.price;
+
+productTotalPrice.innerHTML = totalPrice;
+
+// Modification des quantitées
+
+let btnModif = document.getElementsByClassName("itemQuantity");
+console.log(btnModif);
+
+for (let j = 0; j < btnModif.length; j++) {
+  btnModif[j].addEventListener("click", (event) => {
+    console.log("hello");
+    event.preventDefault();
+  });
+}
+
+// Suppression Article
+
+let btnSupprimer = document.getElementsByClassName("deleteItem");
+
+for (let k = 0; k < btnSupprimer.length; k++) {
+  btnSupprimer[k].addEventListener("click", (event) => {
+    console.log("hello");
+    event.preventDefault();
+
+    let idProduit = cartPanier[k].id;
+    let couleurProduit = cartPanier[k].colors;
+
+    console.log(cartPanier);
+
+    cartPanier = cartPanier.filter(
+      (el) => el.id !== idProduit || el.colors !== couleurProduit
+    );
+
+    console.log(cartPanier);
+    //Alerte produit supprimé et refresh
+
+    localStorage.setItem("panier", JSON.stringify(cartPanier));
+    location.reload();
+    alert("Ce produit a bien été supprimé du panier");
+  });
+}
