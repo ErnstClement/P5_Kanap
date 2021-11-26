@@ -2,6 +2,9 @@
 let cartPanier = JSON.parse(localStorage.getItem("panier")); // creation Variable getItem //
 let productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items" //
 console.table(cartPanier);
+var totalQty = 0;
+var totalPrice = 0;
+
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
   .then((data) => {
@@ -16,11 +19,11 @@ function getPanier() {
     alert("Votre panier est vide.");
   } else cartPanier && productContainer; // creation condition cartPanier & productContainer EXISTE //
   {
-    var totalQty = 0;
-    var totalPrice = 0;
     Object.values(cartPanier).map((item) => {
       //Création automatique du HTML en fonction des objets dans "cartPanier"
-
+      console.log(item);
+      totalQty += parseInt(item.qty);
+      totalPrice += parseInt(item.price) * parseInt(item.qty);
       article = document.createElement("article");
       article.className = "cart__item";
       article.id = "{product-ID}";
@@ -41,7 +44,7 @@ function getPanier() {
       h2.innerHTML = `${item.name} ${item.colors}`;
       div3.appendChild(h2);
       p = document.createElement("p");
-      p.innerHTML = item.price + `€`;
+      p.innerHTML = parseInt(item.price) * parseInt(item.qty) + `€`;
       div3.appendChild(p);
       div4 = document.createElement("div");
       div4.className = "cart__item__content__settings";
@@ -171,21 +174,14 @@ function getPanier() {
 getPanier();
 
 // Calcul du nombre d'article
-var totalQty = 0;
-console.log(item.qty);
-
 var articleQty = document.getElementsByClassName("itemQuantity");
-totalQty += parseInt(item.qty);
-
-console.log(totalQty);
+console.log(articleQty[0].value);
 
 let productTotalQty = document.getElementById("totalQuantity");
 productTotalQty.innerHTML = totalQty;
 
 // calcul du prix total
-var totalPrice = 0;
 let productTotalPrice = document.getElementById("totalPrice");
-totalPrice += item.qty * item.price;
 
 productTotalPrice.innerHTML = totalPrice;
 
@@ -193,9 +189,9 @@ productTotalPrice.innerHTML = totalPrice;
 
 let btnModif = document.getElementsByClassName("itemQuantity");
 console.log(btnModif);
-
 for (let j = 0; j < btnModif.length; j++) {
-  btnModif[j].addEventListener("click", (event) => {
+  console.log(btnModif[j]);
+  btnModif[j].addEventListener("change", (event) => {
     console.log("hello");
     event.preventDefault();
   });
