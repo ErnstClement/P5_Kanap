@@ -1,4 +1,4 @@
-// récupération du LOCAL STORAGE //
+// récupération du LOCAL STORAGE // tt
 let cartPanier = JSON.parse(localStorage.getItem("panier")); // creation Variable getItem //
 let productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items" //
 console.table(cartPanier);
