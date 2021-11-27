@@ -4,6 +4,8 @@ let productContainer = document.getElementById("cart__items"); // creation varia
 console.table(cartPanier);
 var totalQty = 0;
 var totalPrice = 0;
+var articlePrice = 0;
+var p = 0;
 
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
@@ -21,9 +23,10 @@ function getPanier() {
   {
     Object.values(cartPanier).map((item) => {
       //Création automatique du HTML en fonction des objets dans "cartPanier"
-      console.log(item);
       totalQty += parseInt(item.qty);
       totalPrice += parseInt(item.price) * parseInt(item.qty);
+      articlePrice = parseInt(item.price);
+      console.log(articlePrice);
       article = document.createElement("article");
       article.className = "cart__item";
       article.id = "{product-ID}";
@@ -175,7 +178,6 @@ getPanier();
 
 // Calcul du nombre d'article
 var articleQty = document.getElementsByClassName("itemQuantity");
-console.log(articleQty[0].value);
 
 let productTotalQty = document.getElementById("totalQuantity");
 productTotalQty.innerHTML = totalQty;
@@ -188,11 +190,18 @@ productTotalPrice.innerHTML = totalPrice;
 // Modification des quantitées
 
 let btnModif = document.getElementsByClassName("itemQuantity");
-console.log(btnModif);
 for (let j = 0; j < btnModif.length; j++) {
-  console.log(btnModif[j]);
   btnModif[j].addEventListener("change", (event) => {
-    console.log("hello");
+    var totalChange = document.getElementsByClassName(
+      "cart__item__content__titlePrice"
+    );
+    //var el = document.getElementsByClassName("cart__item__content__titlePrice");
+    //var el1 = el.closest("p, div");
+    totalChange = articleQty[0].value * articlePrice;
+
+    p.innerHTML = totalChange + `€`;
+    console.log(p);
+
     event.preventDefault();
   });
 }
