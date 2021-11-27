@@ -200,7 +200,6 @@ for (let j = 0; j < btnModif.length; j++) {
     totalChange = articleQty[0].value * articlePrice;
 
     p.innerHTML = totalChange + `€`;
-    console.log(p);
 
     event.preventDefault();
   });
