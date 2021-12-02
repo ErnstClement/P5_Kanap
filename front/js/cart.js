@@ -84,7 +84,7 @@ function getPanier() {
         let emailRegExp = new RegExp(
           "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
         );
-        let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+        let charRegExp = new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ-]+");
         let addressRegExp = new RegExp(
           "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
         );
@@ -200,7 +200,7 @@ for (let j = 0; j < btnModif.length; j++) {
     totalChange = articleQty[0].value * articlePrice;
 
     p.innerHTML = totalChange + `€`;
-
+    -sw;
     event.preventDefault();
   });
 }
@@ -231,3 +231,11 @@ for (let k = 0; k < btnSupprimer.length; k++) {
     alert("Ce produit a bien été supprimé du panier");
   });
 }
+
+// Envoi du formulaire vers l'api
+
+function envoiFormulaire() {
+  const commande = document.getElementById("order");
+  console.log(commande);
+}
+envoiFormulaire();
