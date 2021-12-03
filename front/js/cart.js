@@ -232,10 +232,23 @@ for (let k = 0; k < btnSupprimer.length; k++) {
   });
 }
 
-// Envoi du formulaire vers l'api
+// Envoi du formulaire vers le localStorage
 
-function envoiFormulaire() {
-  const commande = document.getElementById("order");
-  console.log(commande);
-}
-envoiFormulaire();
+const order = document.getElementById("order");
+
+order.addEventListener("click", (event) => {
+  const inputName = document.getElementById("firstName");
+  const inputLastName = document.getElementById("lastName");
+  const inputAdress = document.getElementById("address");
+  const inputCity = document.getElementById("city");
+  const inputMail = document.getElementById("email");
+  console.log(inputAdress);
+  event.preventDefault();
+
+  //Construction d'un array depuis le local storage
+  // let idProducts = [];
+  // for (let i = 0; i < cartPanier.length; i++) {
+  //   idProducts.push(cartPanier[i].idProduit);
+  //   console.log(idProducts);
+  //  }
+});
