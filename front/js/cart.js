@@ -6,15 +6,13 @@ var totalPrice = 0; // création variable à 0 pour récupération hors boucle
 var articlePrice = 0; // création variable à 0 pour récupération hors boucle
 var p = 0; // création variable à 0 pour récupération hors boucle
 
+console.log(cartPanier);
+
 /* récupération des données de l'API */
 
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
-  .then((data) => {
-    (error) => {
-      console.log("Server éteint");
-    };
-  });
+  .then((data) => {});
 
 /* Fonction pour création du HTML en lien avec le contenu du localStorage */
 
@@ -23,6 +21,8 @@ function getPanier() {
   if (cartPanier == null || cartPanier == 0) {
     // Condition si Panier vide => Alerte "Votre panier est vide"
     alert("Votre panier est vide.");
+    var hidde = document.getElementsByClassName("cart__order");
+    document.getElementsByClassName("cart__order").hidden = true;
   } else cartPanier && productContainer; // creation condition cartPanier & productContainer EXISTE //
   {
     Object.values(cartPanier).map((item) => {
@@ -151,8 +151,6 @@ for (let k = 0; k < btnSupprimer.length; k++) {
     let idProduit = cartPanier[k].id;
     let couleurProduit = cartPanier[k].colors;
 
-    console.log(cartPanier);
-
     cartPanier = cartPanier.filter(
       (el) => el.id !== idProduit || el.colors !== couleurProduit
     );
@@ -168,15 +166,38 @@ for (let k = 0; k < btnSupprimer.length; k++) {
 
 // Envoi du formulaire vers le localStorage
 
-const order = document.getElementById("order");
+const orderBtn = document.getElementById("order");
 
 order.addEventListener("click", (event) => {
-  const inputName = document.getElementById("firstName");
-  const inputLastName = document.getElementById("lastName");
-  const inputAdress = document.getElementById("address");
-  const inputCity = document.getElementById("city");
-  const inputMail = document.getElementById("email");
+  // création constante au click du bouton commander
+  const inputName = document.getElementById("firstName"); // récupération firstName
+  const inputLastName = document.getElementById("lastName"); // récupération lastName
+  const inputAdress = document.getElementById("address"); // récupération address
+  const inputCity = document.getElementById("city"); // récupération city
+  const inputMail = document.getElementById("email"); // récupération email
   console.log(inputAdress);
+
+  /* récupération des id des produits dans le panier */
+
+  var idPanier = []; // création variable vide
+  for (let p = 0; p < cartPanier.length; p++) {
+    // boucle For pour récupérer les ID de chaque produit
+    idPanier.push(cartPanier[p].id);
+  }
+
+  /* Création array avec les coordonnées et les ID des produits dans le panier */
+  const globalOrder = {
+    contact: {
+      firstName: inputName.value,
+      lastName: inputLastName.value,
+      address: inputAdress.value,
+      city: inputCity.value,
+      mail: inputMail.value,
+    },
+    idProduit: idPanier,
+  };
+
+  console.log(globalOrder);
 
   function send(e) {
     e.preventDefault();
@@ -197,7 +218,6 @@ order.addEventListener("click", (event) => {
   }
 
   event.preventDefault();
-  send(e);
 });
 
 //Création formulaire
