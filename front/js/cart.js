@@ -118,6 +118,7 @@ for (let j = 0; j < btnModif.length; j++) {
 
     /* code permettant la modification en temps réel des totaux par article en cas de modification */
     var idElement = btnModif[j].id;
+    console.log(idElement);
     var totalChange = document.getElementById("totalPrice-" + idElement);
     var articlePrice = document.getElementById("priceUnit-" + idElement).value;
     var calcul = articleQty[j].value * parseInt(articlePrice);
@@ -125,16 +126,14 @@ for (let j = 0; j < btnModif.length; j++) {
 
     /* code permettant la mise à jour du local Storage en cas de modification */
     var newQty = cartPanier[j].qty; // récupération valeur d'origine de la quantité
-    var newQtyValue = btnModif[j].value; // récupération valeur modifié de la quantité
-    const difference = cartPanier.find((el) => el.newQtyValue !== newQty); // détection différence entre newQty et newQtyValue
-    difference.qty = newQtyValue; // remplacement des valeurs
-    cartPanier[j].qty = difference.qty; // remplacement de la quantité de l'élément ciblé
+    console.log(newQty);
+    var newQtyValue = document.getElementById(idElement).value; // récupération valeur modifié de la quantité
+    cartPanier[j].qty = newQtyValue; // remplacement de la quantité de l'élément ciblé
     localStorage.setItem("panier", JSON.stringify(cartPanier)); // envoi des nouvelles données vers le Localstorage
 
     console.log(newQtyValue);
 
     event.preventDefault();
-    location.reload();
   });
 }
 
@@ -163,62 +162,6 @@ for (let k = 0; k < btnSupprimer.length; k++) {
     alert("Ce produit a bien été supprimé du panier");
   });
 }
-
-// Envoi du formulaire vers le localStorage
-
-const orderBtn = document.getElementById("order");
-
-order.addEventListener("click", (event) => {
-  // création constante au click du bouton commander
-  const inputName = document.getElementById("firstName"); // récupération firstName
-  const inputLastName = document.getElementById("lastName"); // récupération lastName
-  const inputAdress = document.getElementById("address"); // récupération address
-  const inputCity = document.getElementById("city"); // récupération city
-  const inputMail = document.getElementById("email"); // récupération email
-  console.log(inputAdress);
-
-  /* récupération des id des produits dans le panier */
-
-  var idPanier = []; // création variable vide
-  for (let p = 0; p < cartPanier.length; p++) {
-    // boucle For pour récupérer les ID de chaque produit
-    idPanier.push(cartPanier[p].id);
-  }
-
-  /* Création array avec les coordonnées et les ID des produits dans le panier */
-  const globalOrder = {
-    contact: {
-      firstName: inputName.value,
-      lastName: inputLastName.value,
-      address: inputAdress.value,
-      city: inputCity.value,
-      mail: inputMail.value,
-    },
-    idProduit: idPanier,
-  };
-
-  console.log(globalOrder);
-
-  function send(e) {
-    e.preventDefault();
-    fetch(": http://localhost:3000/api/products", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        value: document.getElementsByClassName("order").value,
-      }),
-    }).then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-    });
-  }
-
-  event.preventDefault();
-});
 
 //Création formulaire
 function getForm() {
@@ -314,3 +257,67 @@ function getForm() {
   };
 }
 getForm();
+
+// Envoi du formulaire vers le localStorage
+
+const orderBtn = document.getElementById("order");
+
+order.addEventListener("click", (event) => {
+  // création constante au click du bouton commander
+  const inputName = document.getElementById("firstName"); // récupération firstName
+  const inputLastName = document.getElementById("lastName"); // récupération lastName
+  const inputAdress = document.getElementById("address"); // récupération address
+  const inputCity = document.getElementById("city"); // récupération city
+  const inputMail = document.getElementById("email"); // récupération email
+  console.log(inputAdress);
+
+  /* récupération des id des produits dans le panier */
+
+  var idPanier = []; // création variable vide
+  for (let p = 0; p < cartPanier.length; p++) {
+    // boucle For pour récupérer les ID de chaque produit
+    idPanier.push(cartPanier[p].id);
+  }
+
+  /* Création array avec les coordonnées et les ID des produits dans le panier */
+  const globalOrder = {
+    //Création tableau
+    contact: {
+      // Partie Contact
+      firstName: inputName.value,
+      lastName: inputLastName.value,
+      address: inputAdress.value,
+      city: inputCity.value,
+      email: inputMail.value,
+    },
+    products: idPanier, // Partie ID
+  };
+
+  console.log(globalOrder);
+
+  /* création méthode POST */
+  const method = {
+    method: "POST",
+    body: JSON.stringify(globalOrder), // Données à envoyer
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    mode: "cors", // autorisation requete
+  };
+
+  /*envoi formulaire vers API */
+
+  fetch("http://localhost:3000/api/products/order", method)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+    });
+
+  event.preventDefault();
+});
