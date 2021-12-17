@@ -1,3 +1,4 @@
+/* récupération de l'API */
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
   .then((data) => {
@@ -7,6 +8,7 @@ fetch("http://localhost:3000/api/products")
       console.log("Server éteint");
     };
 
+    /* Boucle for pour génération automatique de HTML*/
     for (let index = 0; index < data.length; index++) {
       var a = document.createElement("a");
       a.href = "product.html?id=" + data[index]._id;
