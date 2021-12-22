@@ -1,5 +1,6 @@
 /* Récupération de l'ID du produit selectionné */
 const queryString = window.location.search;
+console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get("id");
 
@@ -39,18 +40,20 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
       var colorsChoice = document.getElementById("colors").value;
       console.log(colorsChoice);
       var qty = document.getElementById("quantity").value;
-
-      if (order) {
-        if (colorsChoice == "") {
-          alert("Merci de choisir un colori.");
-        }
-        if (qty == 0) {
-          alert("Merci de choisir une quantitée.");
-        }
-        if (qty >= 101) {
-          alert("Merci de choisir une quantitée inférieur à 100.");
-        }
-      } else {
+      var error = false;
+      if (colorsChoice == "") {
+        alert("Merci de choisir un colori.");
+        error = true;
+      }
+      if (qty == 0) {
+        alert("Merci de choisir une quantitée.");
+        error = true;
+      }
+      if (qty >= 101) {
+        alert("Merci de choisir une quantitée inférieur à 100.");
+        error = true;
+      }
+      if (error === false) {
         /* création array avec les infos du produit */
         var kanapOrder = {
           id: data._id,
@@ -61,7 +64,6 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
           img: data.imageUrl,
           alt: data.altTxt,
         };
-        console.log(kanapOrder);
 
         /* gestion de la commande LocalStorage */
         var panier =
@@ -97,9 +99,10 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
             localStorage.setItem("panier", JSON.stringify(array));
             /* si le produit est déja présent dans le panier, addition de la quantité indiquée dans le localStorage, sinon ajout de la quantité indiquée*/
           }
+
+          alert("Article ajouté à votre panier");
+          event.preventDefault;
         }
-        alert("Article ajouté à votre panier");
-        event.preventDefault;
       }
     });
   });

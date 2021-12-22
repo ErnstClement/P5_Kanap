@@ -5,6 +5,8 @@ var totalQty = 0; // création variable à 0 pour récupération hors boucle
 var totalPrice = 0; // création variable à 0 pour récupération hors boucle
 var articlePrice = 0; // création variable à 0 pour récupération hors boucle
 var p = 0; // création variable à 0 pour récupération hors boucle
+const validId = document.getElementById("orderId");
+validId.innerText = localStorage.getItem("orderId");
 
 console.log(cartPanier);
 
@@ -20,9 +22,6 @@ function getPanier() {
   var index = 1;
   if (cartPanier == null || cartPanier == 0) {
     // Condition si Panier vide => Alerte "Votre panier est vide"
-    alert("Votre panier est vide.");
-    var hidde = document.getElementsByClassName("cart__order");
-    document.getElementsByClassName("cart__order").hidden = true;
   } else cartPanier && productContainer; // creation condition cartPanier & productContainer EXISTE //
   {
     Object.values(cartPanier).map((item) => {
@@ -118,7 +117,6 @@ for (let j = 0; j < btnModif.length; j++) {
 
     /* code permettant la modification en temps réel des totaux par article en cas de modification */
     var idElement = btnModif[j].id;
-    console.log(idElement);
     var totalChange = document.getElementById("totalPrice-" + idElement);
     var articlePrice = document.getElementById("priceUnit-" + idElement).value;
     var calcul = articleQty[j].value * parseInt(articlePrice);
@@ -126,12 +124,11 @@ for (let j = 0; j < btnModif.length; j++) {
 
     /* code permettant la mise à jour du local Storage en cas de modification */
     var newQty = cartPanier[j].qty; // récupération valeur d'origine de la quantité
-    console.log(newQty);
     var newQtyValue = document.getElementById(idElement).value; // récupération valeur modifié de la quantité
     cartPanier[j].qty = newQtyValue; // remplacement de la quantité de l'élément ciblé
     localStorage.setItem("panier", JSON.stringify(cartPanier)); // envoi des nouvelles données vers le Localstorage
 
-    console.log(newQtyValue);
+    productTotalPrice.innerHTML = calcul;
 
     event.preventDefault();
   });
@@ -293,8 +290,6 @@ order.addEventListener("click", (event) => {
     products: idPanier, // Partie ID
   };
 
-  console.log(globalOrder);
-
   /* création méthode POST */
   const method = {
     method: "POST",
@@ -312,11 +307,14 @@ order.addEventListener("click", (event) => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-    })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
+      localStorage.clear();
+      localStorage.setItem("orderId", data.orderId);
+
+      /* redirection*/
+      document.location.href = "confirmation.html?id=" + data.orderId;
+
+      console.log(validId);
+      validId.innerText = localStorage.getItem("orderId");
     });
 
   event.preventDefault();
