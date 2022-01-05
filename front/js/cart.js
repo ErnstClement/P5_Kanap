@@ -17,6 +17,10 @@ fetch("http://localhost:3000/api/products")
 /* Fonction pour création du HTML en lien avec le contenu du localStorage */
 
 if (cartPanier == null || cartPanier == 0) {
+  var hidden = document.querySelector(".cart__order");
+  hidden.style.display = "none";
+  var titre = document.querySelector("h1");
+  titre.textContent = "Votre panier est vide.";
   // Condition si Panier vide => Alerte "Votre panier est vide"
 } else cartPanier & productContainer;
 {

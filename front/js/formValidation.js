@@ -39,14 +39,14 @@ function validAddress(inputAddress) {
 }
 
 /* Validation ville */
-const validCity = function (inputCity) {
+function validCity(inputCity) {
   let cityErrorMsg = inputCity.nextElementSibling;
 
   if (!charRegExp.test(inputCity.value)) {
     cityErrorMsg.innerHTML = "Veuillez renseigner ce champ.";
     error = true;
   }
-};
+}
 
 /* Validation Email */
 function validEmail(inputEmail) {
