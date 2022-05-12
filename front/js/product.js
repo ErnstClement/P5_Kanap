@@ -1,10 +1,10 @@
-/* Récupération de l'ID du produit selectionné */
+/* Récupération de l'ID du produit selectionné et création de la variable ID qui reprendra la valeur de l'ID */
 const queryString = window.location.search;
 console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get("id");
 
-/* récupération de l'API et génération automatique du contenu */
+/* récupération de l'API et génération automatique du contenu via l'api */
 fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'API
   .then((Res) => Res.json())
   .then((data) => {
@@ -27,6 +27,7 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
     var description = document.getElementById("description");
     description.innerHTML = data.description;
 
+    // Boucle pour injecter les differentes couleurs pour le menu de selection
     for (let index = 0; index < data.colors.length; index++) {
       var option = document.createElement("option");
       option.setAttribute("value", data.colors[index]);
@@ -41,18 +42,22 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
       console.log(colorsChoice);
       var qty = document.getElementById("quantity").value;
       var error = false;
+      // condition si pas de couleur choisi => alert
       if (colorsChoice == "") {
         alert("Merci de choisir un colori.");
         error = true;
       }
+      // condition si pas de quantité choisi => alert
       if (qty == 0) {
         alert("Merci de choisir une quantitée.");
         error = true;
       }
+      // condition empechant un choix de quantité supérieur à 100
       if (qty >= 101) {
         alert("Merci de choisir une quantitée inférieur à 100.");
         error = true;
       }
+      // si aucune erreur détecté => création de l'array contenant les informations du produit
       if (error === false) {
         /* création array avec les infos du produit */
         var kanapOrder = {
@@ -60,22 +65,22 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
           name: data.name,
           qty: qty,
           colors: colorsChoice,
-          price: data.price,
           img: data.imageUrl,
           alt: data.altTxt,
         };
 
         /* gestion de la commande LocalStorage */
-        var panier =
-          localStorage.getItem(
-            "panier"
-          ); /* var pour récuperer la totalité du "panier" */
+
+        // var pour récuperer la totalité du "panier"
+        var panier = localStorage.getItem("panier");
+
+        // si le panier est vide/inexistant, création d'un tableau dans lequel sera envoyé la commande kanapOrder, ensuite la commande sera envoyée vers le storageLocal
         if (panier == null) {
           var array = Array();
           array.push(kanapOrder);
           localStorage.setItem("panier", JSON.stringify(array));
-          /* si le panier est vide/inexistant, création d'un tableau dans lequel sera envoyé la commande kanapOrder, ensuite la commande sera envoyée vers le storageLocal */
-          /* sinon */
+
+          // si la variable panier existe, ajout des éléments avec des conditions pour filtrer les ID et les couleurs/
         } else {
           var array = JSON.parse(panier);
           var checkElement = false;
@@ -90,14 +95,16 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
             }
           }
           /* Récupération et Parsing du panier existant, analyse et comparaison du panier avec l'article choisi en fonction de sa couleur et son ID*/
+          // si l'élément est déja présent dans le panier, addition des quantités choisis et celle déja présente dans le localStorage
           if (checkElement == true) {
             array[indexElement].qty =
               parseInt(array[indexElement].qty) + parseInt(qty);
             localStorage.setItem("panier", JSON.stringify(array));
-          } else {
+          }
+          // si l'élément n'existe pas, simple ajout au localStorage
+          else {
             array.push(kanapOrder);
             localStorage.setItem("panier", JSON.stringify(array));
-            /* si le produit est déja présent dans le panier, addition de la quantité indiquée dans le localStorage, sinon ajout de la quantité indiquée*/
           }
 
           alert("Article ajouté à votre panier");
