@@ -1,3 +1,4 @@
+console.log("bonjour");
 /* récupération de l'API */
 fetch("http://localhost:3000/api/products")
   .then((Res) => Res.json())
@@ -5,6 +6,7 @@ fetch("http://localhost:3000/api/products")
     console.log(data);
 
     (error) => {
+      alert("Serveur non disponible");
       console.log("Server éteint");
     };
 

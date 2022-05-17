@@ -100,15 +100,16 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
             array[indexElement].qty =
               parseInt(array[indexElement].qty) + parseInt(qty);
             localStorage.setItem("panier", JSON.stringify(array));
+            alert("Article ajouté à votre panier");
+            event.preventDefault;
           }
           // si l'élément n'existe pas, simple ajout au localStorage
           else {
             array.push(kanapOrder);
             localStorage.setItem("panier", JSON.stringify(array));
+            alert("Article ajouté à votre panier");
+            event.preventDefault;
           }
-
-          alert("Article ajouté à votre panier");
-          event.preventDefault;
         }
       }
     });
