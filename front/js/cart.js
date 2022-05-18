@@ -79,15 +79,14 @@ function getPanier(listProduct) {
     productTitle.appendChild(productColor);
     productColor.innerHTML = cartPanier[panier].colors;
 
-    /*
     // Ajout du prix
     let productPrice = document.createElement("p");
     itemContentTitlePrice.appendChild(productPrice);
     const currentProduct = panierFiltred.find(
-      (p) => p._id === cartPanier[panier].idPanier
+      (p) => p._id === cartPanier[panier].id
     );
     productPrice.innerHTML = currentProduct.price + " €";
-*/
+
     // Ajout de la div "cart__item__content__settings"
     let itemContentSettings = document.createElement("div");
     itemContent.appendChild(itemContentSettings);
@@ -165,13 +164,13 @@ function modifyQuantity() {
         (element) => element.itemModifValue !== itemNew
       );
 
-      result.qty = itemModifValue;
-      cartPanier[j].qty = result.qty;
+      result.quantity = itemModifValue;
+      cartPanier[j].qty = result.quantity;
 
       localStorage.setItem("panier", JSON.stringify(cartPanier));
 
       location.reload(); // rafraichir la  page
-      //alert("votre panier est à jour.")
+      alert("votre panier est à jour.");
     }); //fin addeventlistener
   }
 }
