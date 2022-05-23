@@ -149,6 +149,7 @@ function getTotals() {
 
   // On récupère le prix total
   totalPrice = 0;
+  console.log(panierFiltred);
   // Boucle For pour récupération des quantitées totales de chaque article pour le multiplier avec son prix unitaire
   for (let i = 0; i < myLength; i++) {
     totalPrice += elementsQuantity[i].valueAsNumber * panierFiltred[i].price;
@@ -211,7 +212,6 @@ function deleteArticle() {
   }
 }
 //-----------------------------------------------------------------
-console.log(cartPanier);
 
 //--- Validation formulaire----------------------------------------
 function getForm() {
@@ -321,7 +321,6 @@ getForm(); // Appel Fonction getForm
 //---------------------------------------------------
 
 //--- Envoi du formulaire vers le localStorage--------
-console.log(cartPanier.length);
 const orderBtn = document.getElementById("order");
 function sendForm() {
   // création constante au click du bouton commander
