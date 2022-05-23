@@ -22,11 +22,11 @@ function getProducts() {
       let list = listProduct;
       if (cartPanier && cartPanier.length) {
         // Si le panier(LocalStorage) contient des éléments
-        let recupProduit = cartPanier.map((panier) => panier.idPanier); // Mapping des éléments présent via leur ID
-        panierFiltred = list.filter((el) => recupProduit.includes(el.id));
+        let recupProduit = cartPanier.map((panier) => panier.id); // Mapping des éléments présent via leur ID
+        panierFiltred = list.filter((el) => recupProduit.includes(el._id));
         console.log(listProduct);
         // Appel des fonctions
-        getPanier(panierFiltred);
+        getPanier(listProduct);
         modifyQuantity();
         getTotals();
         deleteArticle();

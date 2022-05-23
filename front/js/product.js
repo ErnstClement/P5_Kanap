@@ -1,5 +1,5 @@
 /* Récupération de l'ID du produit selectionné et création de la variable ID qui reprendra la valeur de l'ID */
-const queryString = window.location.search;
+const queryString = window.location.search; //
 console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get("id");
