@@ -79,6 +79,7 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
           var array = Array();
           array.push(kanapOrder);
           localStorage.setItem("panier", JSON.stringify(array));
+          alert("Article ajouté à votre panier");
 
           // si la variable panier existe, ajout des éléments avec des conditions pour filtrer les ID et les couleurs/
         } else {

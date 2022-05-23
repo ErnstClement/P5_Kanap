@@ -8,6 +8,13 @@ let panierFiltred = []; // Création variable vide pour insertion
 
 /*--- récupération des données de l'API via Fetch---------------------*/
 
+if (cartPanier == null || cartPanier == 0) {
+  const panierVide = "<p>Votre panier est vide</p>";
+  productContainer.innerHTML = panierVide;
+} else {
+  getProducts();
+}
+
 function getProducts() {
   fetch("http://localhost:3000/api/products/") //Requete de récupération d'API
     .then((Res) => Res.json())
@@ -25,15 +32,9 @@ function getProducts() {
         deleteArticle();
 
         // Création Mention panier vide si LocalStorage vide
-      } else {
-        if (cartPanier == null || cartPanier == 0) {
-          const panierVide = "<p>Votre panier est vide</p>";
-          productContainer.innerHTML = panierVide;
-        }
       }
     });
 }
-getProducts();
 /*--------------------------------------------------------------------*/
 
 /*--- Création automatique du panier--------------------------------*/
@@ -80,8 +81,8 @@ function getPanier(listProduct) {
     // Ajout du prix
     let productPrice = document.createElement("p");
     itemContentTitlePrice.appendChild(productPrice);
+    // Utilisation de find pour récuperer les données du produit a partir de la liste des produits API
     const currentProduct = panierFiltred.find(
-      // Récupération des prix grace au données de l'API
       (p) => p._id === cartPanier[panier].id
     );
     productPrice.innerHTML = currentProduct.price + " €";
