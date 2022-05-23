@@ -24,7 +24,6 @@ function getProducts() {
         // Si le panier(LocalStorage) contient des éléments
         let recupProduit = cartPanier.map((panier) => panier.id); // Mapping des éléments présent via leur ID
         panierFiltred = list.filter((el) => recupProduit.includes(el._id));
-        console.log(panierFiltred);
         // Appel des fonctions
         getPanier(panierFiltred);
         modifyQuantity();
@@ -144,8 +143,6 @@ function getTotals() {
   totalPrice = 0;
   // Boucle For pour récupération des quantitées totales de chaque article pour le multiplier avec son prix unitaire
   for (let i = 0; i < myLength; i++) {
-    console.log(totalPrice);
-    console.log(panierFiltred);
     totalPrice += elementsQuantity[i].valueAsNumber * panierFiltred[i].price;
   }
   let productTotalPrice = document.getElementById("totalPrice");
