@@ -203,6 +203,7 @@ function deleteArticle() {
   }
 }
 //-----------------------------------------------------------------
+console.log(cartPanier);
 
 //--- Validation formulaire----------------------------------------
 function getForm() {
@@ -312,24 +313,25 @@ getForm(); // Appel Fonction getForm
 //---------------------------------------------------
 
 //--- Envoi du formulaire vers le localStorage--------
-
+console.log(cartPanier.length);
 const orderBtn = document.getElementById("order");
 function sendForm() {
   // création constante au click du bouton commander
-  const inputName = document.getElementById("firstName").value; // récupération firstName
-  const inputLastName = document.getElementById("lastName").value; // récupération lastName
-  const inputAdress = document.getElementById("address").value; // récupération address
-  const inputCity = document.getElementById("city").value; // récupération city
-  const inputMail = document.getElementById("email").value; // récupération email
+  let firstName = document.getElementById("firstName").value; // récupération firstName
+  let lastName = document.getElementById("lastName").value; // récupération lastName
+  let address = document.getElementById("address").value; // récupération address
+  let city = document.getElementById("city").value; // récupération city
+  let email = document.getElementById("email").value; // récupération email
   const contact = {
     // Partie Contact
-    firstName: inputName,
-    lastName: inputLastName,
-    address: inputAdress,
-    city: inputCity,
-    email: inputMail,
+    firstName,
+    lastName,
+    address,
+    city,
+    email,
   };
 
+  // Création de l'array pour les éléments du panier
   let products = [];
 
   if (
@@ -341,45 +343,43 @@ function sendForm() {
     cartPanier &&
     cartPanier.length
   ) {
-    cartPanier.forEach(function (product) {
-      for (let i = 0; i < cartPanier.length; i++) {
-        products.push(cartPanier[i].id);
-      }
-    });
+    for (let l = 0; l < cartPanier.length; l++) {
+      products.push(cartPanier[l].id);
+    }
     globalOrder(contact, products);
+    console.log(products);
   } else {
     alert("Veuillez remplir le formulaire de contact");
   }
+}
+orderBtn.addEventListener("click", sendForm);
 
-  orderBtn.addEventListener("click", sendForm);
-
-  function globalOrder(contact, products) {
-    if (products && products.length && contact) {
-      fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        body: JSON.stringify({ contact, products }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
+function globalOrder(contact, products) {
+  if (products && products.length && contact) {
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify({ contact, products }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+    })
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
       })
-        .then(function (res) {
-          if (res.ok) {
-            return res.json();
-          }
-        })
-        .then(function (data) {
-          localStorage.clear();
-          localStorage.setItem("orderId", data.orderId);
-          // redirection vers la page de confirmation incluant l'ID de la commande//
-          document.location.href = "confirmation.html?id=" + data.orderId;
-        })
-        .catch(function (err) {
-          alert("Impossible de passer la commande");
-          console.log(err);
-        });
-    }
+      .then(function (data) {
+        localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
+        // redirection vers la page de confirmation incluant l'ID de la commande//
+        document.location.href = "confirmation.html?id=" + data.orderId;
+      })
+      .catch(function (err) {
+        alert("Impossible de passer la commande");
+        console.log(err);
+      });
   }
 }
 
