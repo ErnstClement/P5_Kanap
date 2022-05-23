@@ -2,15 +2,23 @@
 
 let cartPanier = JSON.parse(localStorage.getItem("panier")); // creation Variable getItem / récupération du LocalStorage
 const productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items"
+let productTotalQuantity = document.getElementById("totalQuantity");
+let productTotalPrice = document.getElementById("totalPrice");
+
+totalQuantity = 0;
+totalPrice = 0;
 let panierFiltred = []; // Création variable vide pour insertion
 
 /*--------------------------------------------------------------------*/
 
 /*--- récupération des données de l'API via Fetch---------------------*/
 
+// Si le panier est vide
 if (cartPanier == null || cartPanier == 0) {
   const panierVide = "<p>Votre panier est vide</p>";
-  productContainer.innerHTML = panierVide;
+  productContainer.innerHTML = panierVide; // message P votre panier est vide
+  productTotalQuantity.innerHTML = totalQuantity; // ajout du 0 dans les quantitées
+  productTotalPrice.innerHTML = totalPrice; // ajout du 0 dans le prix total
 } else {
   getProducts();
 }
