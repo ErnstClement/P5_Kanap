@@ -4,7 +4,6 @@ let cartPanier = JSON.parse(localStorage.getItem("panier")); // creation Variabl
 const productContainer = document.getElementById("cart__items"); // creation variable selection Id "cart__items"
 let productTotalQuantity = document.getElementById("totalQuantity");
 let productTotalPrice = document.getElementById("totalPrice");
-
 totalQuantity = 0;
 totalPrice = 0;
 let panierFiltred = []; // Création variable vide pour insertion
@@ -35,7 +34,7 @@ function getProducts() {
         // Appel des fonctions
         getPanier(panierFiltred);
         modifyQuantity();
-        getTotals();
+        getTotals(panierFiltred);
         deleteArticle();
 
         // Création Mention panier vide si LocalStorage vide
@@ -134,7 +133,7 @@ function getPanier(listProduct) {
 // -----------------------------------------------------------
 
 // --- Récupération des totaux ------------------------------------
-function getTotals() {
+function getTotals(panierProducts) {
   // On récupère la quantité totale
   let elementsQuantity = document.getElementsByClassName("itemQuantity");
   let myLength = elementsQuantity.length;
@@ -149,10 +148,12 @@ function getTotals() {
 
   // On récupère le prix total
   totalPrice = 0;
-  console.log(panierFiltred);
   // Boucle For pour récupération des quantitées totales de chaque article pour le multiplier avec son prix unitaire
-  for (let i = 0; i < myLength; i++) {
-    totalPrice += elementsQuantity[i].valueAsNumber * panierFiltred[i].price;
+  for (let i = 0; i < cartPanier.length; i++) {
+    const currentProduct = panierProducts.find(
+      (p) => p._id === cartPanier[i].id
+    );
+    totalPrice += cartPanier[i].qty * currentProduct.price;
   }
   let productTotalPrice = document.getElementById("totalPrice");
   productTotalPrice.innerHTML = totalPrice;
@@ -214,6 +215,7 @@ function deleteArticle() {
 //-----------------------------------------------------------------
 
 //--- Validation formulaire----------------------------------------
+
 function getForm() {
   //Création des expressions régulières
   let emailRegExp = new RegExp(
@@ -259,7 +261,7 @@ function getForm() {
   });
 
   //validation du prénom
-  const validFirstName = function (inputFirstName) {
+  let validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
     if (letterRegExp.test(inputFirstName.value)) {
@@ -271,7 +273,7 @@ function getForm() {
   };
 
   //validation du nom
-  const validLastName = function (inputLastName) {
+  let validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
     if (letterRegExp.test(inputLastName.value)) {
@@ -282,7 +284,7 @@ function getForm() {
   };
 
   //validation de l'adresse
-  const validAddress = function (inputAddress) {
+  let validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
     if (addressRegExp.test(inputAddress.value)) {
@@ -294,7 +296,7 @@ function getForm() {
   };
 
   //validation de la ville
-  const validCity = function (inputCity) {
+  let validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
     if (letterRegExp.test(inputCity.value)) {
@@ -305,7 +307,7 @@ function getForm() {
   };
 
   //validation de l'email
-  const validEmail = function (inputEmail) {
+  let validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
 
     if (emailRegExp.test(inputEmail.value)) {
@@ -356,7 +358,9 @@ function sendForm() {
     globalOrder(contact, products);
     console.log(products);
   } else {
-    alert("Veuillez remplir le formulaire de contact");
+    alert(
+      "Veuillez remplir le formulaire de contact ou ajouter un article dans votre panier."
+    );
   }
 }
 orderBtn.addEventListener("click", sendForm);
