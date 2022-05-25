@@ -1,7 +1,7 @@
 /* Récupération de l'ID du produit selectionné et création de la variable ID qui reprendra la valeur de l'ID */
-const queryString = window.location.search; //
+const queryString = window.location.search; // récupération de l'id du produit
 console.log(queryString);
-const urlParams = new URLSearchParams(queryString);
+const urlParams = new URLSearchParams(queryString); // Création constante permettant de travailler avec l'id récuperer
 const id = urlParams.get("id");
 
 /* récupération de l'API et génération automatique du contenu via l'api */

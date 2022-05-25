@@ -30,7 +30,7 @@ function getProducts() {
       if (cartPanier && cartPanier.length) {
         // Si le panier(LocalStorage) contient des éléments
         let recupProduit = cartPanier.map((panier) => panier.id); // Mapping des éléments présent via leur ID
-        panierFiltred = list.filter((el) => recupProduit.includes(el._id));
+        panierFiltred = list.filter((el) => recupProduit.includes(el._id)); // ici on récupère les éléments avec .filter et . includes pour avoir uniquement les ID présentes dans "list"
         // Appel des fonctions
         getPanier(panierFiltred);
         modifyQuantity();
@@ -48,10 +48,11 @@ function getProducts() {
 function getPanier(listProduct) {
   //creation de l'article
   for (let panier in cartPanier) {
-    let article = document.createElement("article");
-    document.querySelector("#cart__items").appendChild(article);
-    article.className = "cart__item";
-    article.setAttribute("data-id", cartPanier[panier].id);
+    // pour chaque Article dans le panier
+    let article = document.createElement("article"); // Création de l'élement HTML "article"
+    document.querySelector("#cart__items").appendChild(article); // Sélection de l'élément #cart_items qui sera l'enfant de "article"
+    article.className = "cart__item"; // nom de classe de l'objet article = cart_items
+    article.setAttribute("data-id", cartPanier[panier].id); // génération d'une ID automatique lié à l'id de l'objet en cours
 
     // Ajout de la div "cart__item__img"
     let productDiv = document.createElement("div");
@@ -89,6 +90,7 @@ function getPanier(listProduct) {
     itemContentTitlePrice.appendChild(productPrice);
     // Utilisation de find pour récuperer les données du produit a partir de la liste des produits API
     const currentProduct = panierFiltred.find(
+      // Création d'une constante qui va chercher les infos dans l'API avec une égalité stricte avec l'id de l'objet en cours
       (p) => p._id === cartPanier[panier].id
     );
     productPrice.innerHTML = currentProduct.price + " €";
@@ -151,6 +153,7 @@ function getTotals(panierProducts) {
   // Boucle For pour récupération des quantitées totales de chaque article pour le multiplier avec son prix unitaire
   for (let i = 0; i < cartPanier.length; i++) {
     const currentProduct = panierProducts.find(
+      // Création d'une constante qui va chercher les infos dans l'API avec une égalité stricte avec l'id de l'objet en cours
       (p) => p._id === cartPanier[i].id
     );
     totalPrice += cartPanier[i].qty * currentProduct.price;
@@ -173,13 +176,14 @@ function modifyQuantity() {
       let itemModifValue = itemModif[j].valueAsNumber;
 
       const result = cartPanier.find(
-        (element) => element.itemModifValue !== itemNew
+        // recherche dans notre localStorage le premier élément qui correspond à (element)
+        (element) => element.itemModifValue !== itemNew // ici on compare les valeurs de l'élément présent sur itemModif avec une inégalité stricte de sa valeur dans le localStorage
       );
 
-      result.quantity = itemModifValue;
-      cartPanier[j].qty = result.quantity;
+      result.quantity = itemModifValue; // le resultat du changement sera defini comme la nouvelle valeur affiché
+      cartPanier[j].qty = result.quantity; // la quantité de l'élément dans le localStorage sera égale à notre valeur "result"
 
-      localStorage.setItem("panier", JSON.stringify(cartPanier)); // Ré-écriture du local Storage
+      localStorage.setItem("panier", JSON.stringify(cartPanier)); // Ré-écriture du local Storage, le stingify permet de passer l'objet en chaine de caractere
 
       location.reload(); // rafraichir la  page
       alert("votre panier est à jour.");
@@ -189,6 +193,14 @@ function modifyQuantity() {
 //-----------------------------------------------------------------
 
 //--- Suppression article------------------------------------------
+
+/* 
+Pour la suppression d'un article, on créé une fonction qui va pointer vers tous les éléments "deleteItem". Ensuite on met en place une boucle for qui va agir sur tout les éléments  
+"deleteItem" sur un event "Click".
+Ensuite, on crée deux variable Let récupérant l'ID et la couleur de l'élément choisi. Grace aux inégalités strictes et le OU présent ligne 214, on va définir notre nouveau LocalStorage.
+Pour faire simple, on modifiera le LocalStorage en fonction en mettant en rapport l'ID et la couleur pour selectionner l'élément voulu sans toucher aux autres.
+
+*/
 
 function deleteArticle() {
   let deleteItem = document.querySelectorAll(".deleteItem");
@@ -219,11 +231,11 @@ function deleteArticle() {
 function getForm() {
   //Création des expressions régulières
   let emailRegExp = new RegExp(
-    "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+    "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$" // Liste des caractères acceptés
   );
-  let letterRegExp = new RegExp("^[a-zA-Zéèàê,.'-]+$");
+  let letterRegExp = new RegExp("^[a-zA-Zéèàê,.'-]+$"); // Liste des caractères acceptés
   let addressRegExp = new RegExp(
-    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+" // Liste des caractères acceptés
   );
 
   // Création racine pour les écoutes au changement de chaque champ du formulaire
@@ -262,12 +274,13 @@ function getForm() {
 
   //validation du prénom
   let validFirstName = function (inputFirstName) {
-    let firstNameErrorMsg = inputFirstName.nextElementSibling;
+    let firstNameErrorMsg = inputFirstName.nextElementSibling; // Variable Let récupérant le noeud suivant immédiatement inputFirstName
 
     if (letterRegExp.test(inputFirstName.value)) {
-      firstNameErrorMsg.innerHTML = "";
+      // Ici on test la valeur d'inputFirstName avec notre parametre regExp "letterRegExp"
+      firstNameErrorMsg.innerHTML = ""; // Si pas d'erreur, innerHTML vide
     } else {
-      firstNameErrorMsg.innerHTML =
+      firstNameErrorMsg.innerHTML = // Si erreur, affichage du message d'erreur
         "Veuillez renseigner ce champ. ex : Charles";
     }
   };
@@ -332,6 +345,7 @@ function sendForm() {
   let city = document.getElementById("city").value; // récupération city
   let email = document.getElementById("email").value; // récupération email
   const contact = {
+    // Création de l'objet contact
     // Partie Contact
     firstName,
     lastName,
@@ -340,10 +354,11 @@ function sendForm() {
     email,
   };
 
-  // Création de l'array pour les éléments du panier
+  // Création de l'array vide pour les futurs éléments du panier
   let products = [];
 
   if (
+    // Si toutes les champs sont remplis et que le panier existe avec une valeur au minimum
     contact.firstName &&
     contact.lastName &&
     contact.address &&
@@ -352,24 +367,27 @@ function sendForm() {
     cartPanier &&
     cartPanier.length
   ) {
+    // Boucle pour récuperer les ID de chaque produit dans le panier
     for (let l = 0; l < cartPanier.length; l++) {
-      products.push(cartPanier[l].id);
+      products.push(cartPanier[l].id); // Envoie des ID de tous les éléments présent dans le localStorage vers "products"
     }
-    globalOrder(contact, products);
+    globalOrder(contact, products); // appel de la fonction globalOrder avec les parametres contact et products
     console.log(products);
   } else {
+    // sinon
     alert(
       "Veuillez remplir le formulaire de contact ou ajouter un article dans votre panier."
     );
   }
 }
-orderBtn.addEventListener("click", sendForm);
+orderBtn.addEventListener("click", sendForm); // appel de la fonction sendForm au click
 
 function globalOrder(contact, products) {
   if (products && products.length && contact) {
     fetch("http://localhost:3000/api/products/order", {
+      // fetch de l'url order
       method: "POST",
-      body: JSON.stringify({ contact, products }),
+      body: JSON.stringify({ contact, products }), // transformation de contact et products en chaine JSON
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -382,10 +400,9 @@ function globalOrder(contact, products) {
         }
       })
       .then(function (data) {
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        // redirection vers la page de confirmation incluant l'ID de la commande//
-        document.location.href = "confirmation.html?id=" + data.orderId;
+        localStorage.clear(); // vidage du LocalStorage
+        localStorage.setItem("orderId", data.orderId); // Création dans le localStorage de "orderId", contenant l'id de la réponse
+        document.location.href = "confirmation.html?id=" + data.orderId; // redirection vers la page de confirmation incluant l'ID de la commande//
       })
       .catch(function (err) {
         alert("Impossible de passer la commande");
