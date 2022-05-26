@@ -48,8 +48,8 @@ fetch("http://localhost:3000/api/products/" + id) //Requete de récupération d'
         error = true;
       }
       // condition si pas de quantité choisi => alert
-      if (qty == 0) {
-        alert("Merci de choisir une quantitée.");
+      if (qty <= 0) {
+        alert("Merci de choisir une quantitée positive.");
         error = true;
       }
       // condition empechant un choix de quantité supérieur à 100
