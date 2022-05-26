@@ -1,7 +1,6 @@
-console.log("bonjour");
 /* récupération de l'API */
-fetch("http://localhost:3000/api/products")
-  .then((Res) => Res.json())
+fetch("http://localhost:3000/api/products") // appel de l'api
+  .then((Res) => Res.json()) // en cas de réponse, on passe cette réponse au format .Json
   .then((data) => {
     console.log(data);
 
